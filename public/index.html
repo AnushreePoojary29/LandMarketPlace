@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌍 Land Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>🌍 Land Marketplace</h1>
+    <p class="tagline">Connecting Sellers and Buyers of Land</p>
+  </header>
+
+  <main>
+    <section class="form-section">
+      <h2>📝 Seller: Add Your Land</h2>
+      <form id="landForm" class="styled-form">
+        <input type="text" name="name" placeholder="Land Name" required />
+        <input type="text" name="location" placeholder="Location" required />
+        <input type="number" name="price" placeholder="Price in ₹" required />
+        <textarea name="description" placeholder="Description" required></textarea>
+        <input type="email" name="sellerEmail" placeholder="Your Email" required />
+        <button type="submit">Add Land</button>
+      </form>
+    </section>
+
+    <section class="land-listings" id="land-listings">
+      <h2>🌄 Available Lands</h2>
+      <!-- JS will populate cards here -->
+    </section>
+
+    <section class="form-section">
+      <h2>📩 Buyer: Request to Buy Land</h2>
+      <form id="buyForm" class="styled-form">
+        <input type="text" name="buyerName" placeholder="Your Name" required />
+        <input type="email" name="buyerEmail" placeholder="Your Email" required />
+        <input type="text" name="landName" placeholder="Land Name You Want" required />
+        <textarea name="message" placeholder="Message to Seller" required></textarea>
+        <button type="submit">Submit Request</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Land Marketplace | Developed with ❤️</p>
+  </footer>
+
+  <script>
+    // Fetch and display lands
+    fetch('/api/lands')
+      .then(res => res.json())
+      .then(data => {
+        const section = document.getElementById('land-listings');
+        data.forEach(land => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3>${land.name}</h3>
+            <p><strong>Location:</strong> ${land.location}</p>
+            <p><strong>Price:</strong> ₹${land.price}</p>
+            <p>${land.description}</p>
+            <p class="email">📧 ${land.sellerEmail}</p>
+          `;
+          section.appendChild(card);
+        });
+      });
+
+    // Add land
+    document.getElementById('landForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const body = {
+        name: form.name.value,
+        location: form.location.value,
+        price: form.price.value,
+        description: form.description.value,
+        sellerEmail: form.sellerEmail.value
+      };
+      await fetch('/api/lands', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      alert('✅ Land added!');
+      form.reset();
+      location.reload();
+    });
+
+    // Submit buy request
+    document.getElementById('buyForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const body = {
+        buyerName: form.buyerName.value,
+        buyerEmail: form.buyerEmail.value,
+        landName: form.landName.value,
+        message: form.message.value
+      };
+      await fetch('/api/buy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      alert('📨 Request submitted!');
+      form.reset();
+    });
+  </script>
+</body>
+</html>
