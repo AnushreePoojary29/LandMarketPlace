@@ -1,4 +1,1 @@
-Server.js
-index.html
-styles.css
-node modules
+LandMarketPlace is a web-based application that enables direct interaction between land buyers and sellers, eliminating the need for physical site visits. The platform allows sellers to list land properties and buyers to search and express interest based on location and requirements. The application uses MongoDB to store user and land-related data. The backend is powered by Node.js (server.js), which handles routes, database connections, and API logic, while the frontend interface is presented through HTML (index.html) to ensure a simple and user-friendly experience.
